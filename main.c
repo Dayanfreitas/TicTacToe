@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Display/display.h"
+// #include <conio.h>
+
+#include "display.h"
 
 
 #define N_COLUMN 3
@@ -20,25 +22,13 @@ void clrscr(){
     system("@cls||clear");
 }
 
-void presentationScreen() {
-    // char name[5] = {"v","1","0","0"};
-    char version[4] = "v1.1";
-	
-    printf("\n");
-	printf("\t*********************************************\n");
-	printf("\t**              JOGO DA VELHA %s         **\n", version);
-	printf("\t**                                         **\n");
-    printf("\t*********************************************\n");
-    printf("\t**  /*O jogo da velha eh uma atividade     **\n");
-    printf("\t**   da faculdade, feita no dia 06/06/2019 **\n");
-   	printf("\t**   pelo estudante Dayan O. De Freitas*/  **\n");
-	printf("\t*********************************************\n");
-	printf("\t*********************************************\n");    
-}
 
-void main () {
+int main () {
     int sizeLine = (int) SIZE_BOARD/N_COLUMN;
-    // clrscr();
+    int operation;
+    
+    clrscr();
+
     presentationScreen();
 
     for (int line=0; line < sizeLine; line++) {            
@@ -48,28 +38,16 @@ void main () {
         bool isMiddleLine = line == 1;
 
         if (isMiddleLine) {
-    	    printf("\t%s \t%s \t%s \t%s \t%s\n",EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);
-        	printf("\t%c \t%s \t%c \t%s \t%c\n",board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
-	        printf("\t%s \t%s \t%s \t%s \t%s\n",EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);    
-            // sprintf(text_board_line, "\t%s \t%s \t%s \t%s \t%s\n \t%c \t%s \t%c \t%s \t%c\n\t%s \t%s \t%s \t%s \t%s\n", EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY,DIVIDER_V, board[first], DIVIDER_V, board[second], DIVIDER_V, board[third],EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY,DIVIDER_V);
-
+    	    printf("\t\t%s \t%s \t%s \t%s \t%s\n",EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);
+        	printf("\t\t%c \t%s \t%c \t%s \t%c\n",board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
+	        printf("\t\t%s \t%s \t%s \t%s \t%s\n",EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);    
         }else {
-        	printf("\t%c \t%s \t%c \t%s \t%c\n",board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
-            // sprintf(text_board_line, "\t%c \t%s \t%c \t%s \t%c\n", board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
+        	printf("\t\t%c \t%s \t%c \t%s \t%c\n",board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
         }
-
-        // printf("%s", text_board_line);
     }
 
-    // printf("\t%c \t%s \t%c \t%s \t%c\n",board[7],"|",board[8],"|",board[9]);
-    // for (int i=0,y=i+1,z=y+1; i < size; i++, y=i+1, z=y+1) {
-
-        // printf("%d,%d,%d\n", i,y,z);
-    
-    	// printf("\t%c \t%s \t%c \t%s \t%c\n",board[i],DIVIDER_V,board[y],DIVIDER_V,board[z]);
-    
-        // printf("\t%s \n\t%s", DIVIDER_H, DIVIDER_V);
-        // printf("%s", DIVIDER_V);
-        // printf("%s", INTERSECTION);
-    // }
+    operation = getchar();
+    printf("%c", operation);
+ 
+    return EXIT_SUCCESS;
 }
