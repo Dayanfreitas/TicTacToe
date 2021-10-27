@@ -22,15 +22,25 @@ void clrscr(){
     system("@cls||clear");
 }
 
-
+void showBoard();
 int main () {
-    int sizeLine = (int) SIZE_BOARD/N_COLUMN;
-    int operation;
     
+    int operation;
+   
     clrscr();
 
     presentationScreen();
+    showBoard();
+    menu();
+  
+    operation = getchar();
+    printf("%c", operation);
+ 
+    return EXIT_SUCCESS;
+}
 
+void showBoard() {
+    int sizeLine = (int) SIZE_BOARD/N_COLUMN;
     for (int line=0; line < sizeLine; line++) {            
         int first = line*3;
         int second = first+1;
@@ -45,9 +55,4 @@ int main () {
         	printf("\t\t%c \t%s \t%c \t%s \t%c\n",board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
         }
     }
-
-    operation = getchar();
-    printf("%c", operation);
- 
-    return EXIT_SUCCESS;
 }
