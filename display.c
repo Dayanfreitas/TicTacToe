@@ -33,6 +33,6 @@ void menu() {
 }
 
 
-// int soma() {
-// 	return 1;
-// }
+int funcao() {
+	return 1;
+}

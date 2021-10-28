@@ -1,15 +1,15 @@
-#include "Unity/unity.h"
+#include "Unity/src/unity.h"
 #include "../../TicTacToe/display.h"
 
 void setUp(){};
 void tearDown(){};
 
-void test_funcao() {
+void test_funcao(void) {
     TEST_ASSERT_EQUAL(1, funcao());
 }
 
-void main (void) {
+int main (void) {
     UNITY_BEGIN();
-    RUN_TEST();
+    RUN_TEST(test_funcao);
     return UNITY_END();
 }
