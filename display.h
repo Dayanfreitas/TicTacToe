@@ -6,7 +6,7 @@
 void about();
 void menu();
 void presentationScreen();
-
+int funcao();
 
 
 #endif //DISPLAY_H_INCLUDED
