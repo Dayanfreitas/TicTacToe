@@ -3,6 +3,9 @@
 Your Terminal Tic Tac Toe
 
 ### Version 1
+- Version 1.0
+  * Data: 06/06/2019
+
 - Version 1.1
   * Documentation
   * [Makefile](https://www.embarcados.com.br/introducao-ao-makefile/)
