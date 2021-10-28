@@ -60,14 +60,8 @@ void showBoard() {
 }
 
 void clearBoard() {
-    // int zero = 48;//ASCCI
-    // char charValue[1];
     char numero = '0'; 
     for (int i=0; i<SIZE_BOARD; i++) {
-        // sprintf(charValue, "%c", zero+i+1);
-        // printf("%c", );
-        // board[i] = charValue[0];
         board[i] = ++numero;
-        // printf("%s\n", );
     }
 }
