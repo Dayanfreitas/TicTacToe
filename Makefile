@@ -4,6 +4,9 @@ all: display.o
 display.o: 
 	gcc -c display.c
 
+test:
+	make -C test
+
 clean:
 	rm -rf *.o
 
