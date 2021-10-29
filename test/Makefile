@@ -1,123 +1,133 @@
-# CC = gcc
+# ==========================================
+#   Mostly taken from:
+#   https://github.com/ThrowTheSwitch/Unity/tree/master/examples/example_2
+#   http://www.throwtheswitch.org/build/make
+# ==========================================
 
-# # ifeq ($(shell uname -s), Darwin)
-# # CC = clang
-# # endif
-# # ifeq ($(findstring clang, $(CC)), clang)
-# # E = -Weverything
-# # CFLAGS += $E -Wno-unknown-warning-option -Wno-missing-prototypes
-# # CFLAGS += -Wno-unused-macros -Wno-padded -Wno-missing-noreturn
-# # endif
-# COMPILE=gcc -c
-# LINK=gcc
-
-# SRCS=$(wildcard *.c)
-# BASES=$($(SRCS))
-# OBJS=$(.o, $(BASES))
-
-# SRCT = $(wildcard $(PATHT)*.c)
-
-# # PATHU = Unity/src/
-# # PATHS = ../
-# # BUILD_DIR = build
-
-
-# all: test_suite
-# # ./test_suite
-
-# # test_suite: $(OBJS)
-#     # $(CC) $^ $@ $(LDFLAGS)
-
-# test_suite:
-# 	echo $(OBJS)
-	
-	
-ifeq ($(OS),Windows_NT)
-  ifeq ($(shell uname -s),) # not in a bash-like shell
+#We try to detect the OS we are running on, and adjust commands as needed
+ifeq ($(OSTYPE),cygwin)
+	CLEANUP = rm -f
+	CLEANUP_DIR = rm -rf
+	MKDIR = mkdir -p
+	TARGET_EXTENSION=.out
+elseifeq ($(OSTYPE),msys)
+	CLEANUP = rm -f
+	CLEANUP_DIR = rm -rf
+	MKDIR = mkdir -p
+	TARGET_EXTENSION=.exe
+elseifeq ($(OS),Windows_NT)
 	CLEANUP = del /F /Q
 	MKDIR = mkdir
-  else # in a bash-like shell, like msys
-	CLEANUP = rm -f
-	MKDIR = mkdir -p
-  endif
 	TARGET_EXTENSION=.exe
 else
 	CLEANUP = rm -f
+	CLEANUP_DIR = rm -rf
 	MKDIR = mkdir -p
-	TARGET_EXTENSION=out
+	TARGET_EXTENSION=.out
 endif
 
-.PHONY: clean
-.PHONY: test
+COMPILE=gcc
 
-PATHU = ../Unity/src/
-PATHS = src/
-PATHT = test/
-PATHB = build/
-PATHD = build/depends/
-PATHO = build/objs/
-PATHR = build/results/
+# CFLAGS = -std=c99
+# CFLAGS += -Wall
+# CFLAGS += -Wextra
+# CFLAGS += -Werror 
+# CFLAGS += -Wpointer-arith
+# CFLAGS += -Wcast-align
+# CFLAGS += -Wwrite-strings
+# CFLAGS += -Wswitch-default
+# CFLAGS += -Wunreachable-code
+# CFLAGS += -Winit-self
+# CFLAGS += -Wmissing-field-initializers
+# CFLAGS += -Wno-unknown-pragmas
+# CFLAGS += -Wstrict-prototypes
+# CFLAGS += -Wundef
+# CFLAGS += -Wold-style-definition
+# CFLAGS += -Wmissing-prototypes
+# CFLAGS += -Wmissing-declarations
+# CFLAGS += -DUNITY_FIXTURES
 
-BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
+#####################################################
+# PATHS
+#####################################################
+#app
+PATH_APP_SRC = ../src/
+#tests
+PATH_TEST_SRC = ./
+PATH_TEST_RUNNERS = $(PATH_TEST_SRC)test_runners/
+#unity
+PATH_UNITY_ROOT= ../Unity/
+#Directories to create
+PATH_BUILD          = build/
+PATH_BUILD_RESULTS  = $(PATH_BUILD)results/
+PATH_BUILD_OBJS     = $(PATH_BUILD)objs/ #TODO
+PATH_BUILD_DEPENDS  = $(PATH_BUILD)depends/ #TODO
+PATH_DOCS           = docs/
+#Variable used during build call
+BUILD_THE_PATHS     =\
+   $(PATH_BUILD) \
+   $(PATH_BUILD_RESULTS) \
+   $(PATH_BUILD_OBJS) \
+   $(PATH_BUILD_DEPENDS)
 
-SRCT = $(wildcard $(PATHT)*.c)
+#####################################################
+# SOURCE CODE
+#####################################################
+SOURCE_TEST = $(wildcard $(PATH_TEST_SRC)*.c)
+SOURCE_TEST_RUNNERS = $(wildcard $(PATH_TEST_RUNNERS)*.c)
+SOURCE_APP = $(wildcard $(PATH_APP_SRC)*.c)
 
-COMPILE=gcc -c
-LINK=gcc
-DEPEND=gcc -MM -MG -MF
-CFLAGS=-I. -I$(PATHU) -I$(PATHS) -DTEST
+#####################################################
+# RESULTS 
+#####################################################
+RESULTS_TEST = $(PATH_BUILD_RESULTS)results_tests.txt
 
-RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
+TARGET_BASE1=all_tests
+TARGET1 = $(PATH_BUILD)$(TARGET_BASE1)$(TARGET_EXTENSION)
+SRC_FILES1=\
+  $(PATH_UNITY_ROOT)src/unity.c \
+  $(SOURCE_APP) \
+  $(SOURCE_TEST) \
+  $(SOURCE_TEST_RUNNERS)
 
-PASSED = `grep -s PASS $(PATHR)*.txt`
-FAIL = `grep -s FAIL $(PATHR)*.txt`
-IGNORE = `grep -s IGNORE $(PATHR)*.txt`
+# INC_DIRS=-Isrc -I$(PATH_UNITY_ROOT)src -I$(PATH_UNITY_ROOT)extras/fixture/src
+# SYMBOLS=
 
-test: $(BUILD_PATHS) $(RESULTS)
-	@echo "-----------------------\nIGNORES:\n-----------------------"
-	@echo "$(IGNORE)"
-	@echo "-----------------------\nFAILURES:\n-----------------------"
-	@echo "$(FAIL)"
-	@echo "-----------------------\nPASSED:\n-----------------------"
-	@echo "$(PASSED)"
-	@echo "DONE"
+all: clean default print
 
-$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
-	-./$< > $@ 2>&1
+RESULTS=$(RESULTS_TEST)
 
-$(PATHB)Test%.$(TARGET_EXTENSION): $(PATHO)Test%.o $(PATHO)%.o $(PATHU)unity.o #$(PATHD)Test%.d
-	$(LINK) -o $@ $^
+default:$(BUILD_THE_PATHS) $(RESULTS)
 
-$(PATHO)%.o:: $(PATHT)%.c
-	$(COMPILE) $(CFLAGS) $< -o $@
+$(PATH_BUILD):
+	$(MKDIR) $(PATH_BUILD)
 
-$(PATHO)%.o:: $(PATHS)%.c
-	$(COMPILE) $(CFLAGS) $< -o $@
+$(PATH_BUILD_RESULTS):
+	$(MKDIR) $(PATH_BUILD_RESULTS)
 
-$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
-	$(COMPILE) $(CFLAGS) $< -o $@
+$(PATH_BUILD_OBJS):
+	$(MKDIR) $(PATH_BUILD_OBJS)
 
-$(PATHD)%.d:: $(PATHT)%.c
-	$(DEPEND) $@ $<
+$(PATH_BUILD_DEPENDS):
+	$(MKDIR) $(PATH_BUILD_DEPENDS)
 
-$(PATHB):
-	$(MKDIR) $(PATHB)
+$(RESULTS_TEST):
+	$(COMPILE) $(SRC_FILES1) -o $(TARGET1)
+	./$(TARGET1) -v > $@ 2>&1
 
-$(PATHD):
-	$(MKDIR) $(PATHD)
+.PHONEY: print
 
-$(PATHO):
-	$(MKDIR) $(PATHO)
+print:
+	@echo -e "=============\nRUNNING TESTS:\n============="
+	@echo -e "-------------\nIGNORES:\n--------------"
+	@echo `grep -s IGNORE $(RESULTS_TEST)`
+	@echo -e "-------------\nFAILURES:\n--------------"
+	@echo `grep -s FAIL $(RESULTS_TEST)`
+	@echo -e "-------------\nSUCCESSES:\n--------------"
+	@echo `grep -s PASS $(RESULTS_TEST)`
+	@echo -e "\nDONE"
 
-$(PATHR):
-	$(MKDIR) $(PATHR)
+.PHONEY: clean
 
 clean:
-	$(CLEANUP) $(PATHO)*.o
-	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
-	$(CLEANUP) $(PATHR)*.txt
-
-.PRECIOUS: $(PATHB)Test%.$(TARGET_EXTENSION)
-.PRECIOUS: $(PATHD)%.d
-.PRECIOUS: $(PATHO)%.o
-.PRECIOUS: $(PATHR)%.txt
+	$(CLEANUP_DIR) $(PATH_BUILD)
