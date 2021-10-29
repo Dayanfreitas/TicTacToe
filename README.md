@@ -11,12 +11,15 @@ Your Terminal Tic Tac Toe
   * [Makefile](https://www.embarcados.com.br/introducao-ao-makefile/)
   * Refactore
   * Support Linux
+  * Unit Test
 
 
 ### Comandos
 * make clean
 * make run
 * make
+
+* make -c test
 
 1|2|3    
 4|5|6  

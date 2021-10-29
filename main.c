@@ -6,13 +6,7 @@
 
 
 #define N_COLUMN 3
-#define SIZE_BOARD 9
 #define SIZE_BOOKMARKS 2
-
-#define EMPTY " "
-#define DIVIDER_V "|"
-#define DIVIDER_H "-"
-#define INTERSECTION "+"
 
 typedef enum {FALSE , TRUE} bool;
 char board[SIZE_BOARD] = {'1','2','3','4','5','6','7','8','9'};
