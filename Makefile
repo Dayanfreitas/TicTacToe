@@ -1,10 +1,13 @@
-all: display.o
-	gcc display.o main.c -o tictactoe
+all: display.o evaluator.o
+	gcc display.o src/evaluator.o main.c -o tictactoe
 
 display.o: 
 	gcc -c display.c
 
-test:
+evaluator.o: 
+	gcc -c src/evaluator.c
+
+run-test:
 	make -C test
 
 clean:
