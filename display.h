@@ -10,7 +10,7 @@
 #define DIVIDER_H "-"
 #define INTERSECTION "+"
 
-#define SINGLE_PLAYER 'a'
+#define SING_PLAYER 'a'
 #define MULT_PLAYER 'b'
 #define EXIT 'e'
 

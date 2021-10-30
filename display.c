@@ -31,7 +31,7 @@ void goodbye() {
 
 void menu() {
 	puts("");
-	printf("\t[%c].>> Single player\n", SINGLE_PLAYER);
+	printf("\t[%c].>> Single player\n", SING_PLAYER);
 	printf("\t[%c].>> Multiplayers\n", MULT_PLAYER);
 	printf("\t[%c].>> Exit\n", EXIT);
 	puts("");

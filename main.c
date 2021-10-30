@@ -4,6 +4,9 @@
 
 #include "display.h"
 
+#define SINGLE_PLAYER 1
+#define MULTI_PLAYER 2
+
 #define N_COLUMN 3
 #define SIZE_MARKS 2
 
@@ -21,7 +24,7 @@ typedef struct ContextGame
 void showBoard();
 void clearBoard();
 void startGame(ContextGame c);
-void showDisplayPlayers(int n);
+void showDisplayPlayers(ContextGame c);
 
 int main () {
     struct ContextGame contextGame;
@@ -37,11 +40,10 @@ int main () {
         int isMultiplayer = (bool) operation == 'b';
         int isExit = (bool) operation == EXIT;
         
-        
         contextGame.Level = 1;
         if (isSingleplay == TRUE) {
             // printf("is single%d\n", isSingleplay);
-            contextGame.NPlayers = 1;    
+            contextGame.NPlayers = SINGLE_PLAYER;    
             startGame(contextGame);
         }
         if (isMultiplayer == TRUE) {
@@ -89,20 +91,23 @@ void clearBoard() {
 
 void startGame(ContextGame c) {
     clrscr();
-    
-    
-    printf("level of game %d", c.Level);
+    // printf("level of game %d", c.Level);
 
-    showDisplayPlayers(c.NPlayers);
+    showDisplayPlayers(c);
     clearBoard();
     showBoard();
 }
 
-void showDisplayPlayers(int n) { 
-    printf("Numero de jogadores %d\n", n);
+void showDisplayPlayers(ContextGame c) { 
+    // printf("Numero de jogadores %d\n", n);
 
-    printf("\tPlayer-1<%c>\t\t\tPlayer-2<%c>",marks[0], marks[1]);
+    
+    // printf("\tPlayer-1<%c>\t\t\tPlayer-2<%c>",marks[0], marks[1]);
 
+    printf("\tPlayer-1<%c>\r", marks[0]);
+    if (c.NPlayers == MULTI_PLAYER) {
+        printf("\t\t\t\tPlayer-2<%c>", marks[1]);
+    }
 	puts("");
 	puts("");
 	puts("");
