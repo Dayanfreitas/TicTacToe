@@ -13,6 +13,11 @@ Your Terminal Tic Tac Toe
   * Support Linux
   * Unit Test
 
+O que mudou ? 
+  * Mundanção na tela de apresentação do jogo
+  * [Unity](https://github.com/ThrowTheSwitch/Unity) - Para testes unitário em c
+
+
 
 ### Comandos
 * make clean

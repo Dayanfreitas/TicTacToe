@@ -10,12 +10,23 @@
 #define DIVIDER_H "-"
 #define INTERSECTION "+"
 
+#define SINGLE_PLAYER 'a'
+#define MULT_PLAYER 'b'
+#define EXIT 'e'
+
+
+
+// #define MSG_GOODBYE
+
 // char board[SIZE_BOARD] = {'1','2','3','4','5','6','7','8','9'};
 // char board[SIZE_BOARD];
 
 void about();
+void clrscr();
+void goodbye();
 void menu();
 void presentationScreen();
+
 int funcao();
 
 

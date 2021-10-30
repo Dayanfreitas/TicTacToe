@@ -24,9 +24,11 @@ void gotoxy(int x, int y){
 
 int main(){
 
-	srand(time(NULL));
+	// srand(time(NULL));
+	// ligando();
+	
 	char op=' ';
-	ligando();
+	
 do{
 	
 	telaDeApresentacao();
@@ -316,7 +318,7 @@ int escolha,player = 1;
 				 escolha = 1 + ( rand() % 10 );//sorteio de 1 a 10
 			}
 		}
-		// marcação da maquina 
+		// marcaï¿½ï¿½o da maquina 
 		if (escolha == 1 && matriz[1] == '1'){
 			matriz[1] = marcador;
 		}else if(escolha == 2 && matriz[2] == '2'){

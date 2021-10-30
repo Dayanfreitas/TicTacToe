@@ -1,5 +1,6 @@
 #include "display.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void presentationScreen() {
     printf("\n");
@@ -19,11 +20,20 @@ void about() {
    	printf("\t**   pelo estudante Dayan O. De Freitas  **\n");
 }
 
+void clrscr(){
+    system("@cls||clear");
+}
+
+void goodbye() {
+	clrscr();
+    puts("Bye Bye!");
+}
+
 void menu() {
 	puts("");
-	puts("\ta.>> Single player");
-	puts("\tb.>> Multiplayers");
-	puts("\t[E]exit");
+	printf("\t[%c].>> Single player\n", SINGLE_PLAYER);
+	printf("\t[%c].>> Multiplayers\n", MULT_PLAYER);
+	printf("\t[%c].>> Exit\n", EXIT);
 	puts("");
 	// printf("\ta.>>  1 Players");
 	// printf("\n");

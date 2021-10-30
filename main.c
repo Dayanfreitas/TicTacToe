@@ -1,37 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <conio.h>
+#include <locale.h>
 
 #include "display.h"
 
-
 #define N_COLUMN 3
-#define SIZE_BOOKMARKS 2
+#define SIZE_MARKS 2
 
 typedef enum {FALSE , TRUE} bool;
 char board[SIZE_BOARD] = {'1','2','3','4','5','6','7','8','9'};
-char bookmarks[SIZE_BOOKMARKS] = {'X','O'};
+char marks[SIZE_MARKS] = {'X','O'};
 
-void clrscr(){
-    system("@cls||clear");
-}
+
+typedef struct ContextGame
+{
+    int NPlayers;//1 | 2
+    int Level; //1 | 2 | 3
+} ContextGame;
 
 void showBoard();
 void clearBoard();
+void startGame(ContextGame c);
+void showDisplayPlayers(int n);
 
 int main () {
-    
+    struct ContextGame contextGame;
     int operation;
    
-    clrscr();
-    clearBoard();
+    
     presentationScreen();
-    showBoard();
     menu();
-  
-    operation = getchar();
-    printf("%c", operation);
- 
+    while (TRUE)
+    {
+        operation = getchar();
+        int isSingleplay = (bool) operation == 'a';
+        int isMultiplayer = (bool) operation == 'b';
+        int isExit = (bool) operation == EXIT;
+        
+        
+        contextGame.Level = 1;
+        if (isSingleplay == TRUE) {
+            // printf("is single%d\n", isSingleplay);
+            contextGame.NPlayers = 1;    
+            startGame(contextGame);
+        }
+        if (isMultiplayer == TRUE) {
+            contextGame.NPlayers = 2;    
+            printf("is mult %d\n", isMultiplayer);
+            startGame(contextGame);
+        }
+
+        if (isExit == TRUE) {
+            goodbye();
+            break;
+        }
+    }
+    
+        
+        
+        
     return EXIT_SUCCESS;
 }
 
@@ -59,3 +86,25 @@ void clearBoard() {
         board[i] = ++numero;
     }
 }
+
+void startGame(ContextGame c) {
+    clrscr();
+    
+    
+    printf("level of game %d", c.Level);
+
+    showDisplayPlayers(c.NPlayers);
+    clearBoard();
+    showBoard();
+}
+
+void showDisplayPlayers(int n) { 
+    printf("Numero de jogadores %d\n", n);
+
+    printf("\tPlayer-1<%c>\t\t\tPlayer-2<%c>",marks[0], marks[1]);
+
+	puts("");
+	puts("");
+	puts("");
+}
+ 
