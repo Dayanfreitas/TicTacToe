@@ -20,7 +20,6 @@ jobs:
       - name: Make Run Test
         run: |
           sudo apt-get install manpages-dev
-          sudo make install
 
       # Checks out repository under $GITHUB_WORKSPACE
       - name: Checkout Latest Repo
