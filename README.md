@@ -3,7 +3,7 @@
 Your Terminal Tic Tac Toe
 
 ### Version 1
-  * Data: 06/06/2019
+  * Date: 06/06/2019
   * Support Windows
 ### Version 2
   * Date: 31/08/2021
