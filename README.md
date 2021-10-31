@@ -13,6 +13,10 @@ Your Terminal Tic Tac Toe
   * Support Linux
   * Unit Test
 
+
+![Game](capa.png)
+
+
 ### Commands
 
 ```bash 
@@ -47,3 +51,4 @@ You can play in pairs or against the machine.
   
   Player 1 Winn !!
 ```
+
