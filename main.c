@@ -64,6 +64,10 @@ void startGame(ContextGame c);
 void showDisplayPlayers(ContextGame c);
 void displayPlayers(Player *p1, Player *p2);
 
+bool checkBoardVictoryInLine();
+bool checkBoardVictoryInColumn();
+bool checkBoardVictoryInDiagonal();
+bool checkTheTie();
 // helper
 int drawPlayerToStart();
 
@@ -78,10 +82,13 @@ int main()
         presentationScreen();
         menu();
 
+        // printf("%d", rand() % SIZE_BOARD);
+        
+        
         operation = getchar();
         int isSingleplay = (bool)operation == SING_PLAYER;
-        // int isSingleplay = 0;
         int isMultiplayer = (bool)operation == MULT_PLAYER;
+        int isAbout = (bool)operation == ABOUT;
         int isExit = (bool)operation == EXIT;
 
         contextGame.Level = 1;
@@ -94,6 +101,11 @@ int main()
         {
             contextGame.NPlayers = MULTI_PLAYER;
             startGame(contextGame);
+        }
+
+        if (isAbout == TRUE) {
+            about();
+            system("read -p \"Press enter to exit\"");
         }
 
         if (isExit == TRUE)
@@ -140,6 +152,83 @@ void clearBoard()
 
 void initSinglePlayer()
 {
+    puts("JOGO NIVEL 1");
+    // printf("%d", rand() % SIZE_BOARD);
+    bool finish = FALSE;
+    int operation;
+
+    struct Player player1, player2;
+    struct Player *currentPlayer;
+
+    memset(&player1, 0, sizeof(player1));
+    memset(&player2, 0, sizeof(player1));
+
+    player1.ID = 1;
+    player1.Name = "Player 1";
+    player1.Mask = marks[0];
+    // player2.Point = 0;
+
+    player2.ID = 2;
+    player2.Name = "Machine";
+    player2.Mask = marks[1];
+    // player2.Point = 0;
+
+    currentPlayer = &player1;
+    
+    clearBoard();
+
+    while (!finish)
+    {
+        int position;
+        int positionOnBoard;
+        bool canScratch;
+        // puts("CURRENT PLAYER");
+        // printf("%d\n",currentPlayer->ID);
+        // printf("%s\n",currentPlayer->Name);
+        // printf("%c\n",currentPlayer->Mask);
+
+        if (currentPlayer->ID == player1.ID) {
+            clrscr();
+    
+            displayPlayers(&player1, &player2);
+            printf("\n\n");
+            showBoard();
+            printf("\n\n");
+        
+            puts("|========================================");
+            printf("|====>>");
+            printf("\tPlayer-%d<%c> your turn:", currentPlayer->ID, currentPlayer->Mask);
+        }
+
+        do
+        {
+            if (currentPlayer->ID == 1) {
+                scanf("%d", &position);
+            }else{ 
+                position = rand() % SIZE_BOARD;
+            }
+            canScratch = TRUE;
+            positionOnBoard = position - 1;
+            if ((board[positionOnBoard] == player1.Mask) || (board[positionOnBoard] == player2.Mask))
+            {
+                canScratch = FALSE;
+            }
+        } while (position <= 0 || position > SIZE_BOARD || !canScratch);
+        board[positionOnBoard] = currentPlayer->Mask;
+
+        finish = checkVictoryOrFinishGame(currentPlayer);
+
+        //TODO: EXTRAIR FUNÇÂO
+        // tooglePlayer(currentPlayer, &player1, &player2);
+        if (currentPlayer->ID == player1.ID)
+        {
+            currentPlayer = &player2;
+        }
+        else
+        {
+            currentPlayer = &player1;
+        }
+    }
 }
 
 void initMultiPlayer()
@@ -164,6 +253,8 @@ void initMultiPlayer()
     player2.Point = 0;
 
     currentPlayer = &player1;
+    
+    clearBoard();
 
     while (!finish)
     {
@@ -188,8 +279,6 @@ void initMultiPlayer()
         do
         {
             scanf("%d", &position);
-            // flush_in();
-            // position = getchar();
             canScratch = TRUE;
             positionOnBoard = position - 1;
 
@@ -213,24 +302,29 @@ void initMultiPlayer()
         {
             currentPlayer = &player1;
         }
-    
-        
     }
 
-    // while ((getchar()) != '\n');
-    // puts("[Enter]restart");
-    // puts("[E]exit");
-    // operation = getchar();
-    
 }
 
 void startGame(ContextGame c)
 {
-    // clrscr();
-    // showDisplayPlayers(c);
-    // clearBoard();
-    // showBoard();
-    initMultiPlayer();
+    char operation;
+    do {
+        if (c.NPlayers == SINGLE_PLAYER) {
+            // c.Level
+            initSinglePlayer();
+        }
+
+        if (c.NPlayers == MULTI_PLAYER) {
+            initMultiPlayer();
+        }
+
+        while ((getchar()) != '\n');
+        puts("[Enter]Restart Game");
+        puts("[E]Exit");
+        operation = getchar();
+    } while (operation != EXIT);
+    
 }
 
 void displayPlayers(Player *p1, Player *p2)
@@ -259,67 +353,23 @@ void showDisplayPlayers(ContextGame c)
 
 bool checkVictoryOrFinishGame(Player *p)
 {
-    int first, second, third = 0;
-
-    // vericar linhas
-    for (int i = 0; i <= 7; i = i + 3)
-    {
-        //linhas
-        first = i;
-        second = i + 1;
-        third = i + 2;
-
-        if (board[first] == board[second] && board[second] == board[third])
-        {
-            // printf("\n\n %s-%d<%c>  Win!!!", p->Name, p->ID, p->Mask);
-            // clearBoard();
-            return TRUE;
-        }
+    bool victoryOrFinish = FALSE;
+    if (checkBoardVictoryInLine() == TRUE) {
+        victoryOrFinish = TRUE;
     }
-
-    // vericar pontos de cada jogado em coluna
-    for (int i = 0; i <= 3; i++)
-    {
-        //colunas
-        first = i,
-        second = i + 3;
-        third = i + 6;
-
-        if (board[first] == board[second] && board[second] == board[third])
-        {
-            // printf("\n\n %s-%d<%c>  Win!!!", p->Name, p->ID, p->Mask);
-            // clearBoard();
-            return TRUE;
-        }
+    
+    if (checkBoardVictoryInColumn() == TRUE) {
+        victoryOrFinish = TRUE;
     }
-
-    //diagonal
-    if (board[0] == board[4] && board[4] == board[8] ||
-        board[2] == board[4] && board[4] == board[6])
-    {
-        // printf("\n\n %s-%d<%c>  Win!!!", p->Name, p->ID, p->Mask);
-        // clearBoard();
-        return TRUE;
+    
+    if (checkBoardVictoryInDiagonal() == TRUE) {
+        victoryOrFinish = TRUE;
     }
-
-    bool tied = TRUE;
-    for (int i = 0; i < SIZE_BOARD; i++)
-    {
-        printf("%c - ", board[i]);
-        if ((board[i] != marks[0]) || (board[i] != marks[1]))
-        {
-            tied = FALSE;
-        }
+    
+    if (checkTheTie() == TRUE) {
+        victoryOrFinish = TRUE;
     }
-
-    if (tied)
-    {
-        // printf("\n\nGame was a draw!!!");
-        // clearBoard();
-
-        return TRUE;
-    }
-    return FALSE;
+    return victoryOrFinish;
 }
 
 //HELPER
@@ -329,4 +379,50 @@ int drawPlayerToStart()
     // int result = (rand() % (1 - 2)) + 1;
     //TODO: implementar sorteio
     return 1;
+}
+// int rand
+//  1 + ( rand() % 10 );//sorteio de 1 a 10
+
+bool checkBoardVictoryInLine() {    
+    int first, second, third = 0;
+    for (int i=0; i<=7; i=i+3)
+    {
+        first = i;
+        second = i + 1;
+        third = i + 2;
+        if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
+    }
+    return FALSE;
+}
+
+bool checkBoardVictoryInColumn() {
+    int first, second, third = 0;
+    for (int i = 0; i<=3; i++){
+        first = i;
+        second = i + 3;
+        third = i + 6;
+        if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
+    }
+
+    return FALSE;
+}
+bool checkBoardVictoryInDiagonal() {
+    if (
+        ((board[0] == board[4]) && ( board[4] == board[8]))||
+        ((board[2] == board[4]) && (board[4] == board[6]))
+        )
+    { return TRUE; }
+
+
+    return FALSE;
+}
+bool checkTheTie() {
+    bool tied = TRUE;
+    for (int i = 0; i < SIZE_BOARD; i++) {
+        if ((board[i] != marks[0]) || (board[i] != marks[1])) { tied = FALSE; }
+    }
+
+    if (tied) { return TRUE; }
+    
+    return FALSE;
 }
