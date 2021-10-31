@@ -3,24 +3,47 @@
 Your Terminal Tic Tac Toe
 
 ### Version 1
-- Version 1.0
   * Data: 06/06/2019
-
-- Version 1.1
+  * Support Windows
+### Version 2
+  * Date: 31/08/2021
   * Documentation
   * [Makefile](https://www.embarcados.com.br/introducao-ao-makefile/)
   * Refactore
   * Support Linux
   * Unit Test
 
-### Comandos
-* make clean - limpar arquivos compilados
-* make       - compilar tictoctoe
-* make run   - inicar tictoctoe
+### Commands
 
+```bash 
+  # Clean compiled files
+  $ make clean
+```
 
-* make run-test - Rodar os teste initários do projeto
+```bash
+  # Compile tictoctoe compiled files
+  $ make
+```
 
-1|2|3    
-4|5|6  
-7|8|9    
+```bash
+  # Start tictoctoe 
+  $ make run
+```
+
+```bash
+  # Runner test unit 
+  $ make run-test
+```
+
+### How to play
+Playing is very simple. Choose the number corresponding to the position.
+
+You can play in pairs or against the machine.
+
+```bash
+  X|2|O  
+  4|X|O 
+  7|8|X 
+  
+  Player 1 Winn !!
+```
