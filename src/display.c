@@ -33,6 +33,6 @@ void menu() {
 }
 
 
-int funcao() {
-	return 1;
-}
+// int funcao() {
+// 	return 1;
+// }

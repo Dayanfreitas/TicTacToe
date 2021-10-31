@@ -25,6 +25,7 @@ void about();
 void clrscr();
 void goodbye();
 void menu();
+void menuGame();
 void presentationScreen();
 
 int funcao();

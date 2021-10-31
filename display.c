@@ -34,14 +34,15 @@ void menu() {
 	printf("\t[%c].>> Single player\n", SING_PLAYER);
 	printf("\t[%c].>> Multiplayers\n", MULT_PLAYER);
 	printf("\t[%c].>> Exit\n", EXIT);
+	printf("\t[%c].>> About\n", '?');
 	puts("");
-	// printf("\ta.>>  1 Players");
-	// printf("\n");
-	// printf("\tb.>>  2 Player");
-	// printf("\tc.>> Ajustes");
-	// printf("\t\t\td.>> Sair");
 }
 
+void menuGame() {
+	// puts("Restart");
+	// puts("Exit");
+	printf("\t[%c].>> Exit\n", EXIT);
+}
 
 int funcao() {
 	return 1;
