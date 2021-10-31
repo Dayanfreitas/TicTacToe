@@ -5,10 +5,10 @@ display.o:
 	gcc -c display.c
 
 evaluator.o: 
-	gcc -c src/evaluator.c
+	gcc -c evaluator.c
 
 run-test:
-	make -C test
+	make -C ../test
 
 clean:
 	rm -rf *.o

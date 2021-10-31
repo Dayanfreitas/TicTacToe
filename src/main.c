@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "display.h"
-#include "src/evaluator.h"
+#include "evaluator.h"
 
 #define SINGLE_PLAYER 1
 #define MULTI_PLAYER 2

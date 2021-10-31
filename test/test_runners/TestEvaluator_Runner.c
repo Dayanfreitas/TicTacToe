@@ -18,6 +18,4 @@ TEST_GROUP_RUNNER(Evaluator)
   RUN_TEST_CASE(Evaluator, FunctionCheckTheTie);
   RUN_TEST_CASE(Evaluator, FunctionCheckTheTieNot);
 
-  RUN_TEST_CASE(Evaluator, FunctionCanScratchCan);
-  RUN_TEST_CASE(Evaluator, FunctionCanScratchCanot);
 }
