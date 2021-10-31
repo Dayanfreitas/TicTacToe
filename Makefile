@@ -1,5 +1,5 @@
 all: display.o evaluator.o
-	gcc display.o src/evaluator.o main.c -o tictactoe
+	gcc display.o evaluator.o main.c -o tictactoe
 
 display.o: 
 	gcc -c display.c

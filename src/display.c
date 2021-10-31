@@ -1,7 +1,7 @@
 #include "display.h"
 #include <stdio.h>
 
-void presentationScreen() {
+void presentationScreen(void) {
     printf("\n");
 	printf("\t*********************************************\n");
 	printf("\t**              TIC TAC TOE                **\n");
@@ -13,26 +13,16 @@ void presentationScreen() {
 	printf("\t*********************************************\n");    
 }
 
-void about() {
+void about(void) {
 	printf("\t**   O jogo da velha eh uma atividade     **\n");
     printf("\t**   da faculdade, feita no dia 06/06/2019 **\n");
    	printf("\t**   pelo estudante Dayan O. De Freitas  **\n");
 }
 
-void menu() {
+void menu(void) {
 	puts("");
 	puts("\ta.>> Single player");
 	puts("\tb.>> Multiplayers");
 	puts("\t[E]exit");
 	puts("");
-	// printf("\ta.>>  1 Players");
-	// printf("\n");
-	// printf("\tb.>>  2 Player");
-	// printf("\tc.>> Ajustes");
-	// printf("\t\t\td.>> Sair");
 }
-
-
-// int funcao() {
-// 	return 1;
-// }

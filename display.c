@@ -43,7 +43,3 @@ void menuGame() {
 	// puts("Exit");
 	printf("\t[%c].>> Exit\n", EXIT);
 }
-
-int funcao() {
-	return 1;
-}

@@ -14,19 +14,18 @@
 #define N_COLUMN 3
 #define SIZE_MARKS 2
 
-// #define MAGIC_SQUARE
-#define MAGIC_SQUARE_SOLUTION 15
-
 typedef enum
 {
     FALSE,
     TRUE
 } bool;
-int MAGIC_SQUARE[SIZE_BOARD] = {8, 1, 6, 3, 5, 7, 4, 9, 2};
 
-// char board3[N_LINE][N_COLUMN] = {{'1','2','3'},
-//                                 {'4','5','6'},
-//                                 {'7','8','9'}};
+typedef enum
+{
+    ZERO,
+    ONE,
+    SECOND
+} playersID;
 
 char board[SIZE_BOARD] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 char marks[SIZE_MARKS] = {'X', 'O'};
@@ -43,33 +42,25 @@ typedef struct Player
     char *Name;
     char Mask;
     int Point;
-
+    bool IsMachine;
 } Player;
 
 bool checkVictoryOrFinishGame(Player *p);
 
-void printPlayer(Player p)
-{
-    puts("");
-    puts("JOGADOR");
-
-    printf("ID::%d\n", p.ID);
-    printf("NAME::%s\n", p.Name);
-    printf("_>::%c\n", p.Mask);
-}
-
 void showBoard();
 void clearBoard();
 void startGame(ContextGame c);
-void showDisplayPlayers(ContextGame c);
 void displayPlayers(Player *p1, Player *p2);
 
-bool checkBoardVictoryInLine();
-bool checkBoardVictoryInColumn();
-bool checkBoardVictoryInDiagonal();
-bool checkTheTie();
-// helper
-int drawPlayerToStart();
+Player * tooglePlayer(Player *c, Player *p1, Player *p2);
+Player createPlayer(playersID playerId, char *name, char mask, bool isMachine);
+
+// bool checkBoardVictoryInLine();
+// bool checkBoardVictoryInColumn();
+// bool checkBoardVictoryInDiagonal();
+// bool checkTheTie();
+
+void showVictory(Player *p);
 
 int main()
 {
@@ -82,18 +73,16 @@ int main()
         presentationScreen();
         menu();
 
-        // printf("%d", rand() % SIZE_BOARD);
-        
-        
         operation = getchar();
         int isSingleplay = (bool)operation == SING_PLAYER;
         int isMultiplayer = (bool)operation == MULT_PLAYER;
         int isAbout = (bool)operation == ABOUT;
         int isExit = (bool)operation == EXIT;
 
-        contextGame.Level = 1;
+        
         if (isSingleplay == TRUE)
         {
+            contextGame.Level = 1;
             contextGame.NPlayers = SINGLE_PLAYER;
             startGame(contextGame);
         }
@@ -116,6 +105,63 @@ int main()
     }
 
     return EXIT_SUCCESS;
+}
+
+void run (Player player1, Player player2, int level) {
+    struct Player *currentPlayer = &player1;
+    bool finish = FALSE;
+    int operation;
+    
+    clearBoard();
+
+    while (!finish)
+    {
+        int position;
+        int positionOnBoard;
+        bool canScratch;
+
+        if (currentPlayer->IsMachine == FALSE) {
+            clrscr();
+    
+            displayPlayers(&player1, &player2);
+            printf("\n\n");
+            showBoard();
+            printf("\n\n");
+        
+            puts("|========================================");
+            printf("|====>>");
+            printf("\tPlayer-%d<%c> your turn:", currentPlayer->ID, currentPlayer->Mask);
+        }
+
+        do
+        {
+            if (currentPlayer->IsMachine == FALSE) {
+                scanf("%d", &position);
+            }else { 
+                if (level == 1) {
+                    //TODO: IMPLEMENTAR DEMAIS NIVES
+                    position = rand() % SIZE_BOARD;
+                }else{
+                    position = rand() % SIZE_BOARD;
+                }
+            }
+
+            canScratch = TRUE;
+            positionOnBoard = position - 1;
+            if ((board[positionOnBoard] == player1.Mask) || (board[positionOnBoard] == player2.Mask))
+            {
+                canScratch = FALSE;
+            }
+        } while (position <= 0 || position > SIZE_BOARD || !canScratch);
+        board[positionOnBoard] = currentPlayer->Mask;
+
+        finish = checkVictoryOrFinishGame(currentPlayer);
+
+        if (finish) { showVictory(currentPlayer); }
+
+        currentPlayer = tooglePlayer(currentPlayer, &player1, &player2);
+    }
+    
 }
 
 void showBoard()
@@ -150,174 +196,37 @@ void clearBoard()
     }
 }
 
-void initSinglePlayer()
+void initSinglePlayer(Player player1, Player player2, int level)
 {
-    puts("JOGO NIVEL 1");
-    // printf("%d", rand() % SIZE_BOARD);
-    bool finish = FALSE;
-    int operation;
-
-    struct Player player1, player2;
-    struct Player *currentPlayer;
-
-    memset(&player1, 0, sizeof(player1));
-    memset(&player2, 0, sizeof(player1));
-
-    player1.ID = 1;
-    player1.Name = "Player 1";
-    player1.Mask = marks[0];
-    // player2.Point = 0;
-
-    player2.ID = 2;
-    player2.Name = "Machine";
-    player2.Mask = marks[1];
-    // player2.Point = 0;
-
-    currentPlayer = &player1;
-    
-    clearBoard();
-
-    while (!finish)
-    {
-        int position;
-        int positionOnBoard;
-        bool canScratch;
-        // puts("CURRENT PLAYER");
-        // printf("%d\n",currentPlayer->ID);
-        // printf("%s\n",currentPlayer->Name);
-        // printf("%c\n",currentPlayer->Mask);
-
-        if (currentPlayer->ID == player1.ID) {
-            clrscr();
-    
-            displayPlayers(&player1, &player2);
-            printf("\n\n");
-            showBoard();
-            printf("\n\n");
-        
-            puts("|========================================");
-            printf("|====>>");
-            printf("\tPlayer-%d<%c> your turn:", currentPlayer->ID, currentPlayer->Mask);
-        }
-
-        do
-        {
-            if (currentPlayer->ID == 1) {
-                scanf("%d", &position);
-            }else{ 
-                position = rand() % SIZE_BOARD;
-            }
-            canScratch = TRUE;
-            positionOnBoard = position - 1;
-            if ((board[positionOnBoard] == player1.Mask) || (board[positionOnBoard] == player2.Mask))
-            {
-                canScratch = FALSE;
-            }
-        } while (position <= 0 || position > SIZE_BOARD || !canScratch);
-        board[positionOnBoard] = currentPlayer->Mask;
-
-        finish = checkVictoryOrFinishGame(currentPlayer);
-
-        //TODO: EXTRAIR FUNÇÂO
-        // tooglePlayer(currentPlayer, &player1, &player2);
-        if (currentPlayer->ID == player1.ID)
-        {
-            currentPlayer = &player2;
-        }
-        else
-        {
-            currentPlayer = &player1;
-        }
-    }
+    run(player1, player2, level);
 }
 
-void initMultiPlayer()
+void initMultiPlayer(Player player1, Player player2)
 {
-    bool finish = FALSE;
-    int operation;
-
-    struct Player player1, player2;
-    struct Player *currentPlayer;
-
-    memset(&player1, 0, sizeof(player1));
-    memset(&player2, 0, sizeof(player1));
-
-    player1.ID = 1;
-    player1.Name = "Player 1";
-    player1.Mask = marks[0];
-    player2.Point = 0;
-
-    player2.ID = 2;
-    player2.Name = "Player 2";
-    player2.Mask = marks[1];
-    player2.Point = 0;
-
-    currentPlayer = &player1;
-    
-    clearBoard();
-
-    while (!finish)
-    {
-        int position;
-        int positionOnBoard;
-        bool canScratch;
-        // puts("CURRENT PLAYER");
-        // printf("%d\n",currentPlayer->ID);
-        // printf("%s\n",currentPlayer->Name);
-        // printf("%c\n",currentPlayer->Mask);
-
-        clrscr();
-        displayPlayers(&player1, &player2);
-        printf("\n\n");
-        showBoard();
-        printf("\n\n");
-
-        puts("|========================================");
-        printf("|====>>");
-        printf("\tPlayer-%d<%c> your turn:", currentPlayer->ID, currentPlayer->Mask);
-
-        do
-        {
-            scanf("%d", &position);
-            canScratch = TRUE;
-            positionOnBoard = position - 1;
-
-            if ((board[positionOnBoard] == player1.Mask) || (board[positionOnBoard] == player2.Mask))
-            {
-                canScratch = FALSE;
-            }
-
-        } while (position <= 0 || position > SIZE_BOARD || !canScratch);
-        board[positionOnBoard] = currentPlayer->Mask;
-
-        finish = checkVictoryOrFinishGame(currentPlayer);
-
-        //TODO: EXTRAIR FUNÇÂO
-        // tooglePlayer(currentPlayer, &player1, &player2);
-        if (currentPlayer->ID == player1.ID)
-        {
-            currentPlayer = &player2;
-        }
-        else
-        {
-            currentPlayer = &player1;
-        }
-    }
-
+    run(player1, player2, 0);
 }
 
 void startGame(ContextGame c)
 {
     char operation;
     do {
+        struct Player player1, player2;
+        
         if (c.NPlayers == SINGLE_PLAYER) {
-            // c.Level
-            initSinglePlayer();
+            player1 = createPlayer(ONE, "Player 1", marks[0], FALSE);
+            player2 = createPlayer(SECOND, "Machine", marks[1], TRUE);
+            
+            initSinglePlayer(player1, player2, c.Level);
         }
 
         if (c.NPlayers == MULTI_PLAYER) {
-            initMultiPlayer();
+            player1 = createPlayer(ONE, "Player 1", marks[0], FALSE);
+            player2 = createPlayer(SECOND, "Player 2", marks[1], FALSE);
+
+            initMultiPlayer(player1, player2);
         }
+
+        puts("");
 
         while ((getchar()) != '\n');
         puts("[Enter]Restart Game");
@@ -334,95 +243,88 @@ void displayPlayers(Player *p1, Player *p2)
     puts("");
 }
 
-void showDisplayPlayers(ContextGame c)
-{
-    if (c.NPlayers == SINGLE_PLAYER)
-    {
-        printf("Level  %d/3\n", c.Level);
-        printf("\tPlayer<%c>\t\t\tMachine<%c>", marks[0], marks[1]);
-    }
-    else if (c.NPlayers == MULTI_PLAYER)
-    {
-        printf("\tPlayer-1<%c>\t\t\tPlayer-2<%c>", marks[0], marks[1]);
-    }
-
-    puts("");
-    puts("");
-    puts("");
-}
-
 bool checkVictoryOrFinishGame(Player *p)
 {
     bool victoryOrFinish = FALSE;
-    if (checkBoardVictoryInLine() == TRUE) {
+    if (checkBoardVictoryInLine(board)) {
         victoryOrFinish = TRUE;
     }
     
-    if (checkBoardVictoryInColumn() == TRUE) {
+    if (checkBoardVictoryInColumn(board) == TRUE) {
         victoryOrFinish = TRUE;
     }
     
-    if (checkBoardVictoryInDiagonal() == TRUE) {
+    if (checkBoardVictoryInDiagonal(board) == TRUE) {
         victoryOrFinish = TRUE;
     }
     
-    if (checkTheTie() == TRUE) {
+    if (checkTheTie(board, marks[0], marks[1]) == TRUE) {
         victoryOrFinish = TRUE;
     }
     return victoryOrFinish;
 }
 
-//HELPER
-int drawPlayerToStart()
-{
-    // srand(time(NULL));
-    // int result = (rand() % (1 - 2)) + 1;
-    //TODO: implementar sorteio
-    return 1;
+// bool checkBoardVictoryInLine() {    
+//     int first, second, third = 0;
+//     for (int i=0; i<=7; i=i+3)
+//     {
+//         first = i;
+//         second = i + 1;
+//         third = i + 2;
+//         if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
+//     }
+//     return FALSE;
+// }
+
+// bool checkBoardVictoryInColumn() {
+//     int first, second, third = 0;
+//     for (int i = 0; i<=3; i++){
+//         first = i;
+//         second = i + 3;
+//         third = i + 6;
+//         if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
+//     }
+
+//     return FALSE;
+// }
+// bool checkBoardVictoryInDiagonal() {
+    // if (
+    //     ((board[0] == board[4]) && ( board[4] == board[8]))||
+    //     ((board[2] == board[4]) && (board[4] == board[6]))
+    //     )
+    // { return TRUE; }
+
+
+    // return FALSE;
+// }
+// bool checkTheTie() {
+//     bool tied = TRUE;
+//     for (int i = 0; i < 8; i++) {
+//         if ((board[i] != marks[0]) && (board[i] != marks[1])) { tied = FALSE; }
+//     }
+
+//     if (tied) { return TRUE; }
+
+//     return FALSE;
+// }
+
+void showVictory(Player *p) {
+    printf("\n\n%s-%d<%c>  Win!!!", p->Name, p->ID, p->Mask);
 }
-// int rand
-//  1 + ( rand() % 10 );//sorteio de 1 a 10
 
-bool checkBoardVictoryInLine() {    
-    int first, second, third = 0;
-    for (int i=0; i<=7; i=i+3)
-    {
-        first = i;
-        second = i + 1;
-        third = i + 2;
-        if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
-    }
-    return FALSE;
+Player * tooglePlayer(Player *c, Player *p1, Player *p2) {
+    if (c->ID == p1->ID) { return p2; }
+    else { return p1; }
 }
 
-bool checkBoardVictoryInColumn() {
-    int first, second, third = 0;
-    for (int i = 0; i<=3; i++){
-        first = i;
-        second = i + 3;
-        third = i + 6;
-        if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
-    }
+Player createPlayer(playersID playerId, char *name, char mask, bool isMachine) {
+    struct Player player;
+    memset(&player, 0, sizeof(player));
 
-    return FALSE;
+    player.ID      = playerId;
+    player.Name    = name;
+    player.Mask    = mask;
+    player.IsMachine = isMachine;
+    return player;
 }
-bool checkBoardVictoryInDiagonal() {
-    if (
-        ((board[0] == board[4]) && ( board[4] == board[8]))||
-        ((board[2] == board[4]) && (board[4] == board[6]))
-        )
-    { return TRUE; }
 
-
-    return FALSE;
-}
-bool checkTheTie() {
-    bool tied = TRUE;
-    for (int i = 0; i < SIZE_BOARD; i++) {
-        if ((board[i] != marks[0]) || (board[i] != marks[1])) { tied = FALSE; }
-    }
-
-    if (tied) { return TRUE; }
-    
-    return FALSE;
-}
