@@ -16,11 +16,11 @@ jobs:
     name: "Unit Tests"
     runs-on: ubuntu-latest
     steps:
-      # Install Ruby Testing Tools
-      # - name: Make Run Test
-      #   run: |
-      #     make run-test
-      #     sudo gem install rubocop -v 0.57.2
+      # Install GCC 
+      - name: Make Run Test
+        run: |
+          sudo apt-get install manpages-dev
+          sudo make install
 
       # Checks out repository under $GITHUB_WORKSPACE
       - name: Checkout Latest Repo
