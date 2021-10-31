@@ -3,5 +3,5 @@
 
 TEST_GROUP_RUNNER(Display)
 {
-  RUN_TEST_CASE(Display, FunctionReturnOne);
+  // RUN_TEST_CASE(Display, FunctionReturnOne);
 }
