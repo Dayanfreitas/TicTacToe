@@ -2,8 +2,6 @@
 #define EVALUATOR_H_INCLUDED
 
 
-int canScratch(int position,char* board);
-
 int checkBoardVictoryInLine(char *board);
 int checkBoardVictoryInColumn(char *board);
 int checkBoardVictoryInDiagonal(char *board);

@@ -3,9 +3,9 @@
 
 #define VERSION "V.1.1.0"
 
-void about();
-void menu();
-void presentationScreen();
+void about(void);
+void menu(void);
+void presentationScreen(void);
 
 
 #endif //DISPLAY_H_INCLUDED

@@ -3,7 +3,7 @@
 
 TEST_GROUP_RUNNER(Evaluator)
 {
-  // RUN_TEST_CASE(Evaluator, FunctionReturnOne);
+
   RUN_TEST_CASE(Evaluator, FunctionCheckBoardVictoryInLineOne);
   RUN_TEST_CASE(Evaluator, FunctionCheckBoardVictoryInLineSecond);
   RUN_TEST_CASE(Evaluator, FunctionCheckBoardVictoryInLineThird);
@@ -15,7 +15,9 @@ TEST_GROUP_RUNNER(Evaluator)
   RUN_TEST_CASE(Evaluator, FunctionCheckBoardVictoryInDiagonalOne);
   RUN_TEST_CASE(Evaluator, FunctionCheckBoardVictoryInDiagonalSecond);
   
+  RUN_TEST_CASE(Evaluator, FunctionCheckTheTie);
+  RUN_TEST_CASE(Evaluator, FunctionCheckTheTieNot);
+
   RUN_TEST_CASE(Evaluator, FunctionCanScratchCan);
   RUN_TEST_CASE(Evaluator, FunctionCanScratchCanot);
-  
 }

@@ -6,23 +6,6 @@
 #define CAN 1 
 #define CANOT 0 
 
-
-int canScratch(int position, char *board) {
-    if (position <= 0 || position > 9) {
-        return CANOT;
-    }
-
-    int cp = position--;
-    char po = '0';
-    po += cp;
-
-    if (po == cp) { 
-        return CAN;
-    }
-
-    return CANOT;
-}
-
 int checkBoardVictoryInLine(char *board) {
     int isVictory = NOT_VICTORY;
 
@@ -66,7 +49,7 @@ int checkBoardVictoryInDiagonal(char *board) {
 int checkTheTie(char *board, char mask1, char mask2) {
     int tied = 1;
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
         if ((board[i] != mask1) && 
             (board[i] != mask2)) 
         { 
@@ -75,8 +58,6 @@ int checkTheTie(char *board, char mask1, char mask2) {
     }
 
     if (tied == 1) { 
-        printf("EMPATESS");
-        
         return 1; 
     }
 

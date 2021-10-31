@@ -48,12 +48,12 @@ TEST(Evaluator, FunctionCheckBoardVictoryInDiagonalSecond) {
     TEST_ASSERT_TRUE_MESSAGE(checkBoardVictoryInDiagonal(board), "diagonal direita para esquerda");
 }
 
-IGNORE_TEST(Evaluator, FunctionCanScratchCan) {
-    char board[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    TEST_ASSERT_TRUE_MESSAGE(canScratch(1, board), "Pode marcar  na posicao");
+TEST(Evaluator, FunctionCheckTheTie) {
+    char board[9] = {'X', 'O', 'O', 'X', 'O', 'X', 'O', 'X', 'O'};
+    TEST_ASSERT_TRUE_MESSAGE(checkTheTie(board, 'X', 'O'), "Deu velha");
 }
 
-IGNORE_TEST(Evaluator, FunctionCanScratchCanot) {
-    char board[9] = {'X', '2', '3', '4', '5', '6', '7', '8', '9'};
-    TEST_ASSERT_FALSE_MESSAGE(canScratch(1, board), "Não marcar na posicao");
+TEST(Evaluator, FunctionCheckTheTieNot) {
+    char board[9] = {'1', '2', 'X', '4', 'X', '6', 'X', '8', '9'};
+    TEST_ASSERT_FALSE_MESSAGE(checkTheTie(board, 'X', 'O'), "Deu velha");
 }

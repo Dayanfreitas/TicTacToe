@@ -8,10 +8,6 @@
 
 #define SINGLE_PLAYER 1
 #define MULTI_PLAYER 2
-
-#define N 3
-#define N_LINE 3
-#define N_COLUMN 3
 #define SIZE_MARKS 2
 
 typedef enum
@@ -45,22 +41,16 @@ typedef struct Player
     bool IsMachine;
 } Player;
 
-bool checkVictoryOrFinishGame(Player *p);
-
-void showBoard();
-void clearBoard();
-void startGame(ContextGame c);
-void displayPlayers(Player *p1, Player *p2);
+bool checkIsTheTie();
+bool checkVictory();
 
 Player * tooglePlayer(Player *c, Player *p1, Player *p2);
 Player createPlayer(playersID playerId, char *name, char mask, bool isMachine);
 
-// bool checkBoardVictoryInLine();
-// bool checkBoardVictoryInColumn();
-// bool checkBoardVictoryInDiagonal();
-// bool checkTheTie();
-
+void displayPlayers(Player *p1, Player *p2);
+void showTicTacToe();
 void showVictory(Player *p);
+void startGame(ContextGame c);
 
 int main()
 {
@@ -110,9 +100,11 @@ int main()
 void run (Player player1, Player player2, int level) {
     struct Player *currentPlayer = &player1;
     bool finish = FALSE;
+    bool victory= FALSE;
+    bool tie = FALSE;
     int operation;
     
-    clearBoard();
+    clearBoard(board);
 
     while (!finish)
     {
@@ -125,7 +117,7 @@ void run (Player player1, Player player2, int level) {
     
             displayPlayers(&player1, &player2);
             printf("\n\n");
-            showBoard();
+            showBoard(board);
             printf("\n\n");
         
             puts("|========================================");
@@ -155,45 +147,20 @@ void run (Player player1, Player player2, int level) {
         } while (position <= 0 || position > SIZE_BOARD || !canScratch);
         board[positionOnBoard] = currentPlayer->Mask;
 
-        finish = checkVictoryOrFinishGame(currentPlayer);
-
-        if (finish) { showVictory(currentPlayer); }
+        victory = checkVictory();
+        tie = checkIsTheTie();
+        
+        if (victory) { 
+            showVictory(currentPlayer); 
+            finish = TRUE;
+        }else if (tie) {
+            showTicTacToe();
+            finish = TRUE;
+        }
 
         currentPlayer = tooglePlayer(currentPlayer, &player1, &player2);
     }
     
-}
-
-void showBoard()
-{
-    int sizeLine = (int)SIZE_BOARD / N_COLUMN;
-    for (int line = 0; line < sizeLine; line++)
-    {
-        int first = line * 3;
-        int second = first + 1;
-        int third = second + 1;
-        bool isMiddleLine = line == 1;
-
-        if (isMiddleLine)
-        {
-            printf("\t\t%s \t%s \t%s \t%s \t%s\n", EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);
-            printf("\t\t%c \t%s \t%c \t%s \t%c\n", board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
-            printf("\t\t%s \t%s \t%s \t%s \t%s\n", EMPTY, INTERSECTION, EMPTY, INTERSECTION, EMPTY);
-        }
-        else
-        {
-            printf("\t\t%c \t%s \t%c \t%s \t%c\n", board[first], DIVIDER_V, board[second], DIVIDER_V, board[third]);
-        }
-    }
-}
-
-void clearBoard()
-{
-    char numero = '0';
-    for (int i = 0; i < SIZE_BOARD; i++)
-    {
-        board[i] = ++numero;
-    }
 }
 
 void initSinglePlayer(Player player1, Player player2, int level)
@@ -243,7 +210,12 @@ void displayPlayers(Player *p1, Player *p2)
     puts("");
 }
 
-bool checkVictoryOrFinishGame(Player *p)
+bool checkIsTheTie(void) 
+{
+    return checkTheTie(board, marks[0], marks[1]);
+}
+
+bool checkVictory(void)
 {
     bool victoryOrFinish = FALSE;
     if (checkBoardVictoryInLine(board)) {
@@ -257,59 +229,16 @@ bool checkVictoryOrFinishGame(Player *p)
     if (checkBoardVictoryInDiagonal(board) == TRUE) {
         victoryOrFinish = TRUE;
     }
-    
-    if (checkTheTie(board, marks[0], marks[1]) == TRUE) {
-        victoryOrFinish = TRUE;
-    }
+
     return victoryOrFinish;
 }
 
-// bool checkBoardVictoryInLine() {    
-//     int first, second, third = 0;
-//     for (int i=0; i<=7; i=i+3)
-//     {
-//         first = i;
-//         second = i + 1;
-//         third = i + 2;
-//         if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
-//     }
-//     return FALSE;
-// }
-
-// bool checkBoardVictoryInColumn() {
-//     int first, second, third = 0;
-//     for (int i = 0; i<=3; i++){
-//         first = i;
-//         second = i + 3;
-//         third = i + 6;
-//         if (board[first] == board[second] && board[second] == board[third]) { return TRUE; }
-//     }
-
-//     return FALSE;
-// }
-// bool checkBoardVictoryInDiagonal() {
-    // if (
-    //     ((board[0] == board[4]) && ( board[4] == board[8]))||
-    //     ((board[2] == board[4]) && (board[4] == board[6]))
-    //     )
-    // { return TRUE; }
-
-
-    // return FALSE;
-// }
-// bool checkTheTie() {
-//     bool tied = TRUE;
-//     for (int i = 0; i < 8; i++) {
-//         if ((board[i] != marks[0]) && (board[i] != marks[1])) { tied = FALSE; }
-//     }
-
-//     if (tied) { return TRUE; }
-
-//     return FALSE;
-// }
-
 void showVictory(Player *p) {
     printf("\n\n%s-%d<%c>  Win!!!", p->Name, p->ID, p->Mask);
+}
+
+void showTicTacToe(void) {
+    puts("\n\nTicTacToe !!!");
 }
 
 Player * tooglePlayer(Player *c, Player *p1, Player *p2) {

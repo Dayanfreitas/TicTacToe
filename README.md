@@ -13,18 +13,13 @@ Your Terminal Tic Tac Toe
   * Support Linux
   * Unit Test
 
-O que mudou ? 
-  * Mundanção na tela de apresentação do jogo
-  * [Unity](https://github.com/ThrowTheSwitch/Unity) - Para testes unitário em c
-
-
-
 ### Comandos
-* make clean
-* make run
-* make
+* make clean - limpar arquivos compilados
+* make       - compilar tictoctoe
+* make run   - inicar tictoctoe
 
-* make -c test
+
+* make run-test - Rodar os teste initários do projeto
 
 1|2|3    
 4|5|6  
